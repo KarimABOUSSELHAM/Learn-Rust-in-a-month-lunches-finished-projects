@@ -1,0 +1,341 @@
+﻿language,code
+english,en
+german,de
+french,fr
+spanish,es
+japanese,ja
+russian,ru
+portuguese,pt
+italian,it
+vernacular chinese,zh
+persian,fa
+polish,pl
+arabic,ar
+dutch,nl
+ukrainian,uk
+norwegian (bokmål),no
+hebrew,he
+romanian,ro
+indonesian,id
+turkish,tr
+czech,cs
+serbian,sr
+danish,da
+swedish,sv
+korean,ko
+hungarian,hu
+finnish,fi
+simple english,simple
+vietnamese,vi
+thai,th
+catalan,ca
+bengali,bn
+greek,el
+hindi,hi
+cantonese,zh-yue
+bulgarian,bg
+malay,ms
+azerbaijani,az
+estonian,et
+slovak,sk
+armenian,hy
+croatian,hr
+serbo-croatian,sh
+uzbek,uz
+basque,eu
+slovene,sl
+swahili,sw
+lithuanian,lt
+kazakh,kk
+tamil,ta
+esperanto,eo
+latvian,lv
+belarusian (official narkamaŭka orthography),be
+albanian,sq
+urdu,ur
+galician,gl
+georgian,ka
+malayalam,ml
+egyptian arabic,arz
+macedonian,mk
+afrikaans,af
+mongolian,mn
+hausa,ha
+telugu,te
+kannada,kn
+latin,la
+icelandic,is
+kurdish (sorani),ckb
+bosnian,bs
+assamese,as
+burmese,my
+cebuano,ceb
+norwegian (nynorsk),nn
+tagalog,tl
+marathi,mr
+irish,ga
+welsh,cy
+belarusian (taraškievica orthography),be-tarask
+asturian,ast
+nepali,ne
+kurdish (kurmanji),ku
+occitan,oc
+south azerbaijani,azb
+breton,br
+javanese,jv
+southern min,zh-min-nan
+igbo,ig
+kyrgyz,ky
+alemannic german,als
+scots,sco
+wu chinese,wuu
+sinhala,si
+luxembourgish,lb
+somali,so
+tajik,tg
+west frisian,fy
+khmer,km
+sanskrit,sa
+bashkir,ba
+punjabi,pa
+tatar,tt
+aragonese,an
+western punjabi,pnb
+waray,war
+odia,or
+lombard,lmo
+minangkabau,min
+classical chinese,zh-classical
+yoruba,yo
+ido,io
+amharic,am
+pashto,ps
+dusun,dtp
+sundanese,su
+balinese,ban
+yiddish,yi
+gujarati,gu
+low german,nds
+chechen,ce
+fiji hindi,hif
+sicilian,scn
+bavarian,bar
+moroccan arabic,ary
+old english,ang
+karakalpak,kaa
+kinyarwanda,rw
+central bikol,bcl
+venetian,vec
+crimean tatar,crh
+faroese,fo
+haitian creole,ht
+mingrelian,xmf
+turkmen,tk
+chuvash,cv
+maltese,mt
+mazanderani,mzn
+sindhi,sd
+corsican,co
+interlingue,ie
+lao,lo
+yakut,sah
+zaza,diq
+ladin,lld
+quechua (southern quechua),qu
+dagbani,dag
+rusyn,rue
+western armenian,hyw
+interlingua,ia
+zamboanga chavacano,cbk-zam
+fula,ff
+malagasy,mg
+bihari (bhojpuri),bh
+silesian,szl
+maithili,mai
+gagauz,gag
+limburgish,li
+picard,pcd
+uyghur,ug
+banjarese,bjn
+standard moroccan amazigh,zgh
+kapampangan,pam
+central tibetan (lhasa tibetan),bo
+guarani,gn
+scottish gaelic,gd
+betawi,bew
+emilian–romagnol,eml
+hakka chinese,hak
+santali,sat
+avar,av
+eastern min,cdo
+madurese,mad
+pennsylvania dutch,pdc
+piedmontese,pms
+extremaduran,ext
+abkhaz,ab
+acehnese,ace
+lingala,ln
+zulu,zu
+franco-provençal,frp
+gan chinese,gan
+inari sámi,smn
+ligurian,lij
+neapolitan,nap
+romansh,rm
+west flemish,vls
+xhosa,xh
+cherokee,chr
+judaeo-spanish,lad
+kabyle,kab
+nigerian pidgin,pcm
+north frisian,frr
+sotho,st
+ossetian,os
+volapük,vo
+lingua franca nova,lfn
+nahuatl,nah
+old church slavonic,cu
+upper sorbian,hsb
+dutch low saxon,nds-nl
+northern sámi,se
+samogitian,bat-smg
+meadow mari,mhr
+hawaiian,haw
+inuktitut,iu
+kashubian,csb
+komi,kv
+manx,gv
+pannonian rusyn,rsk
+papiamento,pap
+samoan,sm
+saraiki,skr
+twi,tw
+cornish,kw
+gorontalo,gor
+greenlandic,kl
+ingush,inh
+karachay-balkar,krc
+kongo,kg
+maldivian,dv
+meitei,mni
+mirandese,mwl
+moksha,mdf
+navajo,nv
+shan,shn
+shona,sn
+tumbuka,tum
+veps,vep
+walloon,wa
+kashmiri,ks
+tulu,tcy
+cree,cr
+ilocano,ilo
+māori,mi
+norfuk,pih
+sardinian,sc
+tetum,tet
+aramaic (syriac),arc
+aymara,ay
+dzongkha,dz
+friulian,fur
+jamaican patois,jam
+lezgian,lez
+lower sorbian,dsb
+newar,new
+pangasinan,pag
+talysh,tly
+buryat (russia buriat),bxr
+kotava,avk
+oromo,om
+erzya,myv
+ghanaian pidgin english,gpe
+gilaki,glk
+gothic,got
+luganda,lg
+mon,mnw
+udmurt,udm
+zeelandic,zea
+konkani (goan konkani),gom
+banyumasan,map-bms
+bishnupriya manipuri,bpy
+buginese,bug
+ewe,ee
+igala,igl
+kirundi,rn
+komi-permyak,koi
+lojban,jbo
+mandailing batak,btm
+tarantino,roa-tara
+tswana,tn
+tuvan,tyv
+angika,anp
+doteli,dty
+iban,iba
+novial,nov
+pontic greek,pnt
+romani (vlax romani),rmy
+sakizaya,szy
+swazi,ss
+tigre,tig
+tigrinya,ti
+zhuang (standard zhuang),za
+wolof,wo
+amis,ami
+aromanian,roa-rup
+fon,fon
+hill mari,mrj
+tok pisin,tpi
+wayuu,guc
+adyghe,ady
+chamorro,ch
+dagaare,dga
+kabardian,kbd
+livvi-karelian,olo
+shilha,shi
+tyap,kcg
+cheyenne,chy
+fijian,fj
+kikuyu,ki
+lak,lbe
+latgalian,ltg
+nias,nia
+norman,nrm
+northern sotho,nso
+tongan,to
+tsonga,ts
+võro,fiu-vro
+atayal,tay
+atikamekw,atj
+awadhi,awa
+bislama,bi
+french guianese creole,gcr
+pa'o,blk
+sranan tongo,srn
+venda,ve
+bambara,bm
+chewa,ny
+farefare (gurene),gur
+iñupiaq,ik
+komering,kge
+palatine german,pfl
+saterland frisian,stq
+southern altai,alt
+dinka,din
+gun,guw
+kalmyk oirat,xal
+toba batak,bbc
+ripuarian,ksh
+n'ko,nqo
+sango,sg
+tahitian,ty
+west coast bajau,bdr
+fante,fat
+pali,pi
+southern ndebele,nr
+kabiye,kbp
+seediq,trv
+kusaal,kus
+obolo,ann
+mooré,mos
+paiwan,pwn
+tai nuea,tdd
