@@ -1,0 +1,10 @@
+[package]
+name = "typing_tutor"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+crossterm = "0.28.1"
+ansi_term ="0.12.1"
+unicode-normalization="0.1.20"
+regex="1.11.1"
