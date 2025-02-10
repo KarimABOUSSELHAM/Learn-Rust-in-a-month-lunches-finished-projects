@@ -1,7 +1,8 @@
 ## Introduction  
 
 Welcome to this repository which contains the answers to the unfinished projects included in [Learn Rust in a Month of Lunches](https://www.manning.com/books/learn-rust-in-a-month-of-lunches) (1st edition by David MacLeod, February 2024  ISBN 9781633438231  568 pages).   
-![image](https://github.com/user-attachments/assets/fbce2ecc-e175-40ed-aef5-4e1e6cc85f35)
+![image](https://github.com/user-attachments/assets/1aa56e07-3ba2-403a-bbdb-10cec5ec2d25)
+
 
 This book is a masterpiece which is highly recommended, as far as I am concerned, to everyone who wants to merely scratch the surface of the promising programming language of [Rust](https://www.rust-lang.org/) or move further and gain a decent level in it.   
 
