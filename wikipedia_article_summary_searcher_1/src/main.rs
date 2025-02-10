@@ -13,6 +13,14 @@ use reqwest::{blocking::get, StatusCode};
 use std::{error::Error, fmt::Debug, io::{stdout, stdin}, collections::HashMap};
 use csv::Reader;
 
+use ratatui::{
+    backend::CrosstermBackend,
+    layout::{Constraint, Direction, Layout},
+    widgets::{Block, Borders, Paragraph},
+    Terminal,
+    widgets::Wrap
+};
+
 #[derive(Debug, Deserialize, Default, Serialize)]
 struct CurrentArticle {
     title: String,
@@ -41,7 +49,7 @@ impl App {
                         let text=response.text()?;
                         if let Ok(article) = serde_json::from_str::<CurrentArticle>(&text) {
                             self.current_article=article;
-                            self.last_error = None
+                            self.last_error = None;
                     } else {self.last_error =Some("Error! Received an invalid json format".to_string());}
                 },
                     StatusCode::BAD_REQUEST => {self.last_error =Some("Error 400: Bad request".to_string());},
@@ -71,8 +79,56 @@ impl App {
             }
             Ok(())
         }
+    fn draw_response(&self) -> Result<(), anyhow::Error>{
+            let stdout=stdout();
+            let backend=CrosstermBackend::new(&stdout);
+            let mut terminal=Terminal::new(backend)?;
+            terminal.draw( |f| {
+                let layout=Layout::default()
+                .direction(Direction::Vertical)
+                .constraints([Constraint::Percentage(10), Constraint::Percentage(10),
+                Constraint::Percentage(20), Constraint::Percentage(50),Constraint::Percentage(10)])
+                .split(f.area());
+            let search_area=layout[0];
+            let article_title_area=layout[1];
+            let article_description_area=layout[2];
+            let article_extract_area=layout[3];
+            let error_area=layout[4];
+
+            let search_block=Block::default().title("Searching for").borders(Borders::ALL);
+            let title_block=Block::default().title("Article title").borders(Borders::ALL);
+            let description_block=Block::default().title("Article description").borders(Borders::ALL);
+            let extract_block=Block::default().title("Article extract").borders(Borders::ALL);
+            let error_block=Block::default().title("Error").borders(Borders::ALL);
+
+            let search_text=Paragraph::new(self.search_string.clone())
+            .block(search_block)
+            .wrap(Wrap {trim: false}); // add the wrapping in order for the text no to overflow the borders
+            let title_text=Paragraph::new(self.current_article.title.clone())
+            .block(title_block)
+            .wrap(Wrap {trim: false});
+            let description_text=Paragraph::new(self.current_article.description.clone())
+            .block(description_block)
+            .wrap(Wrap {trim: false});
+            let extract_text=Paragraph::new(self.current_article.extract.clone())
+            .block(extract_block)
+            .wrap(Wrap {trim: false});
+            let error_text=Paragraph::new(self.last_error.as_deref().unwrap_or(""))
+            .block(error_block)
+            .wrap(Wrap {trim: false});    
+
+
+            f.render_widget(search_text, search_area);
+            f.render_widget(title_text, article_title_area);
+            f.render_widget(description_text, article_description_area);
+            f.render_widget(extract_text, article_extract_area);
+            f.render_widget(error_text, error_area);
+        })?;
+        Ok(())
+        
 }
-impl std::fmt::Display for App {
+}
+/*impl std::fmt::Display for App {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f,
         "
@@ -92,7 +148,7 @@ impl std::fmt::Display for App {
         )
     }
 }
-
+*/
 //Remove the language code to let the choice to the user hereafter 
 const URL_WITHOUT_LANGUGAGE: &str= "wikipedia.org/api/rest_v1/page/summary";
 // Function to load the "wikipedia_languages" file and form the corresponding Hashmap to use it later on
@@ -111,7 +167,6 @@ fn load_languages() -> Result<HashMap<String,String>, Box<dyn Error>> {
 
 fn main() -> Result<(), Box<dyn Error>> {
     let language_map = load_languages()?;
-    //println!("{}",language_map["french"].to_string());
     let mut app=App::default();
     let mut input_language = String::new();
     println!("Please type the language of the API [English]");
@@ -127,7 +182,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!("Language not found. Using English as default");
     }
     loop {
-        println!("{}", app);
+        //println!("{}", app);
+        let _drawing=app.draw_response();
+        _drawing?;
+
         if let Event::Key(key_event)=read()? {
             if key_event.kind==KeyEventKind::Press {
                 match key_event.code {
