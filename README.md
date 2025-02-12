@@ -1,3 +1,4 @@
+![GitHub stars](https://img.shields.io/github/stars/your-repo)
 # Learn Rust in a Month of Lunches – Exercise Corrections
 ## Introduction  
 
