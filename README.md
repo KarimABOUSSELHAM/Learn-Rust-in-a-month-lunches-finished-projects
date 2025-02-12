@@ -1,3 +1,4 @@
+# Learn Rust in a Month of Lunches – Exercise Corrections
 ## Introduction  
 
 Welcome to this repository which contains the answers to the unfinished projects included in [Learn Rust in a Month of Lunches](https://www.manning.com/books/learn-rust-in-a-month-of-lunches) (1st edition by David MacLeod, February 2024  ISBN 9781633438231  568 pages).   
