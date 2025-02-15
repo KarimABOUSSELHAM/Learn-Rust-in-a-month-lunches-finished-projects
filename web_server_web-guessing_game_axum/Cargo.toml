@@ -1,0 +1,13 @@
+[package]
+name = "web_server_web-guessing_game_1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum={version="0.8.1", features = ["tokio", "http1"]}
+fastrand= "2.3.0"
+tokio={version="1.43.0", features=["macros", "rt-multi-thread"]} 
+tower-sessions="0.14.0"
+time="0.3.37"
+uuid={version = "1.13.1", features = ["v4","fast-rng","macro-diagnostics"]}
+serde="1.0.217"
