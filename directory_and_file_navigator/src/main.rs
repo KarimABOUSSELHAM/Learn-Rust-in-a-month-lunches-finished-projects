@@ -28,6 +28,7 @@ impl DirectoryApp {
 impl eframe::App for DirectoryApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
+            egui::ScrollArea::vertical().show(ui, |ui| {
             //This part is pretty easy! Make a button and .pop() when it is clicked.
             if ui.button(" .. ").clicked() {
                 self.current_dir.pop();
@@ -82,6 +83,7 @@ impl eframe::App for DirectoryApp {
                 }
             }
         });
+    });
         let width = ctx.screen_rect().max.x / 2.0;
         if !self.file_content.is_empty() {
             egui::SidePanel::right("Text viewer")
