@@ -3,10 +3,11 @@ use std::{
     fs::{read_dir,read_to_string},
     path::PathBuf,
     };
-
+use lazy_static::lazy_static;
+use std::sync::Mutex;
 use eframe::egui;
 //RichText is used in egui if you want to change the text of a widget, and Color32 allows us to choose a color.
-use egui::{Color32, RichText, TextEdit};
+use egui::{Color32, RichText, TextEdit, Checkbox};
 //The app so far holds a PathBuf that we will use .push() and .pop() on.
 struct DirectoryApp {
     file_content: String,
@@ -25,9 +26,16 @@ impl DirectoryApp {
     }
 }
 
+// Use lazy_static to define a globally accessible, mutable static variable
+lazy_static! {
+    static ref IS_CHECKED: Mutex<bool> = Mutex::new(false); // Mutex is used to allow safe mutable access
+}
+
 impl eframe::App for DirectoryApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
+            // Add space to prevent overlap with the top panel which will include the checkbox
+            ui.add_space(25.0);
             egui::ScrollArea::vertical().show(ui, |ui| {
             //This part is pretty easy! Make a button and .pop() when it is clicked.
             if ui.button(" .. ").clicked() {
@@ -84,14 +92,22 @@ impl eframe::App for DirectoryApp {
             }
         });
     });
-        let width = ctx.screen_rect().max.x / 2.0;
-        if !self.file_content.is_empty() {
-            egui::SidePanel::right("Text viewer")
-            .min_width(width)
-            .show(ctx, |ui| {
-                ui.add(TextEdit::multiline(&mut self.file_content).desired_width(width));
-            });
+    egui::TopBottomPanel::top("top_panel").show(ctx, |ui| { 
+        let mut is_checked = IS_CHECKED.lock().unwrap();
+        ui.add(Checkbox::new(&mut is_checked, "Show file content")); 
+        if *is_checked {
+            //If the checkbox is checked, we display the file content in a new panel on the right side.
+            let width = ctx.screen_rect().max.x / 2.0;
+            if !self.file_content.is_empty() {
+                egui::SidePanel::right("Text viewer")
+                .min_width(width)
+                .show(ctx, |ui| {
+                    ui.add_space(25.0);
+                    ui.add(TextEdit::multiline(&mut self.file_content).desired_width(width));
+                });
+            }
         }
+    });
     }
 }
 
