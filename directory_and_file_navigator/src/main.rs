@@ -12,11 +12,11 @@ use egui::{Color32, RichText, TextEdit, Checkbox};
 struct DirectoryApp {
     file_content: String,
     current_dir: PathBuf,
-    file_loc: PathBuf,
-    edited_content: String,
-    is_saved: bool,
-    show_unsaved: bool,
-    pending_file_loc: Option<PathBuf>,
+    file_loc: PathBuf,//Captures the path of the clicked file
+    edited_content: String,//Capture the content of the modification in the right panel
+    is_saved: bool, //track whether the file is saved or not
+    show_unsaved: bool, //track the condition of whether the prompt window about saving should be displayed
+    pending_file_loc: Option<PathBuf>,//Stores the file location where the user wants to switch
     }
 
 impl DirectoryApp {
@@ -34,6 +34,36 @@ impl DirectoryApp {
             pending_file_loc: None,
         }
     }
+
+    fn load_file(&mut self,file_path: PathBuf) {
+        if !self.is_saved {
+            self.show_unsaved = true;
+            self.pending_file_loc = Some(file_path);
+        } else {
+            self.update_file_content(file_path);
+        }
+    }
+
+    fn update_file_content(&mut self,file_path: PathBuf) {
+        match read_to_string(&file_path) {
+            Ok(content) => {
+                self.file_content = content.clone();
+                self.edited_content = content;
+                self.file_loc = file_path;
+                self.is_saved = true;
+            },
+            Err(e) => {
+                eprintln!("Error reading file: {}", e);
+            }
+        }
+    }
+    fn save_file(&mut self) {
+
+        if let Err(e) = std::fs::write(&self.file_loc, &self.edited_content) {
+            eprintln!("Error saving file: {}", e);
+        } else {self.is_saved=true;}
+    }
+
 }
 
 // Use lazy_static to define a globally accessible, mutable static variable
@@ -66,7 +96,6 @@ impl eframe::App for DirectoryApp {
                         //We’ll make buttons with different text depending on whether we have a file or a
                         //directory. If we have a directory, clicking the button will .push() to the
                         //PathBuf and move us into that directory.
-                        
                                     if ui
                                     .button(RichText::new(&dir_name).color(Color32::GRAY))
                                     .clicked(){
@@ -81,23 +110,7 @@ impl eframe::App for DirectoryApp {
                                 {
                                     let new_file_loc: PathBuf = self.current_dir.join(&file_name);
                                     // Check if there are unsaved changes before switching files
-                                    if self.edited_content != self.file_content && !self.is_saved {
-                                        self.show_unsaved = true;
-                                        self.pending_file_loc = Some(new_file_loc);
-                                    } else {
-                                        match read_to_string(&new_file_loc) {
-                                            Ok(content) => {
-                                                self.file_content = content.clone();
-                                                self.edited_content = content;
-                                                self.file_loc = new_file_loc;
-                                                self.is_saved = true;
-                                            },
-                                            Err(e) => {
-                                                eprintln!("Error reading file: {}", e);
-                                            }
-                                        }
-                                    }
-                                    
+                                    self.load_file(new_file_loc);
                                 }
                             }
                         } else {
@@ -123,34 +136,14 @@ impl eframe::App for DirectoryApp {
                         }
                         self.show_unsaved = false;
                         if let Some(new_file_loc) = self.pending_file_loc.take() {
-                            match read_to_string(&new_file_loc) {
-                                Ok(content) => {
-                                    self.file_content = content.clone();
-                                    self.edited_content = content;
-                                    self.file_loc = new_file_loc;
-                                    self.is_saved = true;
-                                }
-                                Err(e) => {
-                                    eprintln!("Error reading file: {}", e);
-                                }
-                            }
+                            self.update_file_content(new_file_loc);
                         }
                     }
                     if ui.button("Discard Changes").clicked() {
                         self.show_unsaved = false; // Close the unsaved prompt
                         // Discard changes and load the content of the next file
                         if let Some(new_file_loc) = self.pending_file_loc.take() {
-                            match read_to_string(&new_file_loc) {
-                                Ok(content) => {
-                                    self.file_content = content.clone();
-                                    self.edited_content = content;
-                                    self.file_loc = new_file_loc;
-                                    self.is_saved = true;
-                                }
-                                Err(e) => {
-                                    eprintln!("Error reading file: {}", e);
-                                }
-                            }
+                            self.update_file_content(new_file_loc);
                         }
                         
                     }
@@ -163,10 +156,7 @@ impl eframe::App for DirectoryApp {
             ui.add(Checkbox::new(&mut is_checked, "Show file content")); 
             if *is_checked && !self.file_content.is_empty() {
                 if ui.button("Save").clicked() {
-                        // Attempt to write the file
-                        if let Err(e) = std::fs::write(&self.file_loc, &self.edited_content) {
-                            eprintln!("Error saving file: {}", e);
-                        } else {self.is_saved=true;}
+                        self.save_file();
                 }
                 }
             });
