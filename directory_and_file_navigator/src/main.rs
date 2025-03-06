@@ -3,8 +3,6 @@ use std::{
     fs::{read_dir,read_to_string, write, /*Metadata,*/ DirEntry},
     path::PathBuf,
     };
-use lazy_static::lazy_static;
-use std::sync::Mutex;
 use eframe::egui;
 //RichText is used in egui if you want to change the text of a widget, and Color32 allows us to choose a color.
 use egui::{Color32, RichText, TextEdit, Checkbox};
@@ -17,6 +15,10 @@ struct DirectoryApp {
     is_saved: bool, //track whether the file is saved or not
     show_unsaved: bool, //track the condition of whether the prompt window about saving should be displayed
     pending_file_loc: Option<PathBuf>,//Stores the file location where the user wants to switch
+    error_messages: Vec<String>, // New field to store error messages
+    show_errors: bool, // New field to track if errors should be shown
+    show_error_window: bool, // New field to track whether the error window should be shown
+    is_checked: bool, //New field to track whether the save file checkbox is activated
     }
 
 impl DirectoryApp {
@@ -32,6 +34,10 @@ impl DirectoryApp {
             is_saved: true,
             show_unsaved: false,
             pending_file_loc: None,
+            error_messages: Vec::new(), // Initialize error messages
+            show_errors: false,
+            show_error_window: false,
+            is_checked: false,
         }
     }
 
@@ -53,7 +59,9 @@ impl DirectoryApp {
                 self.is_saved = true;
             },
             Err(e) => {
-                eprintln!("Error reading file: {}", e);
+                if self.show_errors {
+                self.error_messages.push(format!("Error reading file: {}", e));
+                }
             }
         }
     }
@@ -61,20 +69,29 @@ impl DirectoryApp {
         // if let expression was refactored here
         write(&self.file_loc, &self.edited_content)
         .map(|_| self.is_saved=true)
-        .unwrap_or_else(|e| {eprintln!("Error saving file: {}", e)})
-        /*if let Err(e) = write(&self.file_loc, &self.edited_content) {
-            eprintln!("Error saving file: {}", e);
-        } else {self.is_saved=true;}*/
+        .unwrap_or_else(|e| {
+            self.error_messages.push(format!("Error reading file name: {:?}", e));
+        })
     }
     //new method to refactor how we handle each entry when reading the current directory
     fn process_entry(&mut self, entry: DirEntry, ui: &mut egui::Ui) {
         let metadata=  match entry.metadata() {
             Ok(meta) => meta,
-            Err(_)=> return
+            Err(e)=> {
+                if self.show_errors{
+                self.error_messages.push(format!("Error reading metadata: {}", e));
+                }
+                return;
+            }
         };
         let name= match entry.file_name().into_string() {
             Ok(n) => n,
-            Err(_) => return,
+            Err(e) => {
+                if self.show_errors{
+                self.error_messages.push(format!("Error reading file name: {:?}", e));
+                }
+                return;
+            }
         };
         match metadata.file_type() {
             t if t.is_dir() => {if ui.button(RichText::new(&name).color(Color32::GRAY)).clicked(){
@@ -94,10 +111,7 @@ impl DirectoryApp {
 
 }
 
-// Use lazy_static to define a globally accessible, mutable static variable
-lazy_static! {
-    static ref IS_CHECKED: Mutex<bool> = Mutex::new(false); // Mutex is used to allow safe mutable access
-}
+
 
 impl eframe::App for DirectoryApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
@@ -134,45 +148,42 @@ impl eframe::App for DirectoryApp {
                         //Refactoring of "if let" expression made here
                         write(&self.file_loc, &self.edited_content)
                         .map(|_| {self.is_saved=true})
-                        .unwrap_or_else(|e| {eprintln!("Error saving file: {}", e)});
-                        /*if let Err(e) = std::fs::write(&self.file_loc, &self.edited_content) {
-                            eprintln!("Error saving file: {}", e);
-                        } else {
-                            self.is_saved = true;
-                        }*/
+                        .unwrap_or_else(|e| {
+                            self.error_messages.push(format!("Error saving written file: {:?}", e));
+                        });
                         self.show_unsaved = false;
                         //Refactoring of "if let" expression made here
                         self.pending_file_loc.take()
                         .map(|new_file_loc| {self.update_file_content(new_file_loc)});
-                        /*if let Some(new_file_loc) = self.pending_file_loc.take() {
-                            self.update_file_content(new_file_loc);
-                        }*/
                     }
                     if ui.button("Discard Changes").clicked() {
                         self.show_unsaved = false; // Close the unsaved prompt
                         // Discard changes and load the content of the next file while refactoring the "if let" expression
                         self.pending_file_loc.take()
                         .map(|new_file_loc| {self.update_file_content(new_file_loc)});
-                        /*if let Some(new_file_loc) = self.pending_file_loc.take() {
-                            self.update_file_content(new_file_loc);
-                        }*/
-                        
                     }
             });
         }
 
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| { 
-            let mut is_checked = IS_CHECKED.lock().unwrap();
             ui.horizontal(|ui| {
-                ui.add(Checkbox::new(&mut is_checked, "Show file content")); 
-                if *is_checked && !self.file_content.is_empty() {
+                ui.add(Checkbox::new(&mut self.is_checked, "Show file content")); 
+                if self.is_checked && !self.file_content.is_empty() {
                     if ui.button("Save").clicked() {
                             self.save_file();
                     }
                 }
+                if ui.add(Checkbox::new(&mut self.show_errors, "Show Error Window")).clicked(){
+                    if !self.error_messages.is_empty() {
+                        self.show_errors = true; // Don't show window if there are no errors
+                    } else {
+                        //self.show_errors=true;
+                        self.show_error_window = false; // Show error window when checkbox is checked
+                    }
+                };
             });
         });    
-        if *IS_CHECKED.lock().unwrap() {
+        if self.is_checked {
             //If the checkbox is checked, we display the file content in a new panel on the right side.
             let width = ctx.screen_rect().max.x / 2.0;
             if !self.file_content.is_empty() {
@@ -188,6 +199,23 @@ impl eframe::App for DirectoryApp {
                     }
                 });
             }
+        }
+        // Show error messages in a side panel if enabled
+        if self.show_errors && !self.error_messages.is_empty() {
+            egui::Window::new("Error Messages")
+        .collapsible(false)
+        .resizable(false)
+        .show(ctx, |ui| {
+            ui.add_space(10.0);
+            for error in &self.error_messages {
+                ui.label(RichText::new(error).color(Color32::RED));
+            }
+            ui.add_space(10.0);
+            if ui.button("OK").clicked() {
+                self.show_error_window = false; // Close window when "OK" is clicked
+                self.error_messages.clear(); // Clear error messages when "OK" is clicked
+            }
+        });
         }
     }
 }
