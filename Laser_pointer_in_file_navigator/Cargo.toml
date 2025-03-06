@@ -1,0 +1,9 @@
+[package]
+name = "Laser_pointer_in_file_navigator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+egui="0.31.1"
+eframe="0.31.1"
+fastrand="2.3.0"
